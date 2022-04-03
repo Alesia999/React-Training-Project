@@ -1,32 +1,10 @@
-import React, { useState } from "react";
-import api from "../api";
+import React from "react";
+import User from "./user";
 
-const Users = () => {
-  const [users, setUsers] = useState(api.users.fetchAll());
-
-  const handleDelete = (userId) => {
-    setUsers((prevState) => prevState.filter((user) => user._id !== userId));
-  };
-
-  const renderPhrase = (number) => {
-    return number >= 2
-      ? `${number} Users are`
-      : number === 1
-      ? "1 User is"
-      : "No one is";
-  };
-
+const Users = ({ users, handleDelete, onToggleBookmark }) => {
   return (
     <>
-      <h2
-        className={
-          "fs-3 d-inline-flex p-1 text-white bg-primary " +
-          (users.length ? "" : "bg-danger")
-        }
-      >
-        {renderPhrase(users.length)} ready to hang out today
-      </h2>
-      {users.length ? (
+      {users.length && (
         <table className="table">
           <thead>
             <tr>
@@ -35,44 +13,20 @@ const Users = () => {
               <th scope="col">Профессия</th>
               <th scope="col">Встретился, раз</th>
               <th scope="col">Оценка</th>
+              <th scope="col">Избранное</th>
             </tr>
           </thead>
           <tbody>
             {users &&
               users.map((user) => (
-                <tr key={user._id}>
-                  <th>{user.name}</th>
-                  <td>
-                    <div className="d-flex ">
-                      {user.qualities.map((quality) => {
-                        return (
-                          <p
-                            key={quality._id}
-                            className={"m-1 badge bg-" + quality.color}
-                          >
-                            {quality.name}
-                          </p>
-                        );
-                      })}
-                    </div>
-                  </td>
-                  <td>{user.profession.name}</td>
-                  <td>{user.completedMeetings}</td>
-                  <td>{user.rate}</td>
-                  <td>
-                    <button
-                      className="btn btn-danger"
-                      onClick={() => handleDelete(user._id)}
-                    >
-                      delete
-                    </button>
-                  </td>
-                </tr>
+                <User
+                  {...user}
+                  onToggleBookmark={onToggleBookmark}
+                  handleDelete={handleDelete}
+                />
               ))}
           </tbody>
         </table>
-      ) : (
-        ""
       )}
     </>
   );
