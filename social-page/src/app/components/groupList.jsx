@@ -13,7 +13,6 @@ const GroupList = ({
       <ul className="list-group">
         {Object.keys(items).map((item) => (
           <li
-            role="button"
             key={items[item][valueProperty]}
             className={
               "list-group-item " +
